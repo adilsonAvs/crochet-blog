@@ -1,0 +1,1 @@
+# Add the authorized Google publisher record supplied by your AdSense account after approval.

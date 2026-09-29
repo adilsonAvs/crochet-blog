@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.cozycrochettrail.com/sitemap.xml
