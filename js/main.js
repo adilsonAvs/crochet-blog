@@ -1,4 +1,16 @@
 (() => {
+  const adsenseSrc = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8056002733100841';
+  const alreadyLoaded = document.querySelector(`script[src="${adsenseSrc}"]`);
+  if (alreadyLoaded) return;
+
+  const adsense = document.createElement('script');
+  adsense.async = true;
+  adsense.src = adsenseSrc;
+  adsense.setAttribute('crossorigin', 'anonymous');
+  document.head.append(adsense);
+})();
+
+(() => {
   const nav = document.getElementById('site-nav');
   const toggle = document.querySelector('.menu-toggle');
   if (!nav || !toggle) return;
