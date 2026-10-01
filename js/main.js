@@ -1,4 +1,33 @@
 (() => {
+  const measurementId = 'G-CEZWXGM1RZ';
+  const tagSrc = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
+  const apiName = 'cctAnalyticsConsent';
+  if (window[apiName]) return;
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.gtag('consent', 'default', { analytics_storage: 'denied' });
+
+  let configured = false;
+  const setAnalyticsConsent = granted => {
+    window.gtag('consent', 'update', { analytics_storage: granted ? 'granted' : 'denied' });
+    if (!granted || configured) return;
+
+    window.gtag('js', new Date());
+    window.gtag('config', measurementId);
+    if (!document.querySelector(`script[src="${tagSrc}"]`)) {
+      const tag = document.createElement('script');
+      tag.async = true;
+      tag.src = tagSrc;
+      document.head.append(tag);
+    }
+    configured = true;
+  };
+
+  window[apiName] = { setAnalyticsConsent };
+})();
+
+(() => {
   const adsenseSrc = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8056002733100841';
   const alreadyLoaded = document.querySelector(`script[src="${adsenseSrc}"]`);
   if (alreadyLoaded) return;

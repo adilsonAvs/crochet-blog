@@ -35,6 +35,10 @@
     analytics: value.split('-').includes('a'),
     ads: value.split('-').includes('d')
   });
+  const validChoices = new Set(['essential', 'essential-a', 'essential-d', 'essential-a-d']);
+  const setAnalyticsConsent = granted => {
+    window.cctAnalyticsConsent?.setAnalyticsConsent(granted);
+  };
 
   const closeBanner = () => {
     banner.hidden = true;
@@ -49,10 +53,11 @@
   };
 
   const choice = readChoice();
-  if (choice) {
+  if (validChoices.has(choice)) {
     const saved = parseChoice(choice);
     analytics.checked = saved.analytics;
     ads.checked = saved.ads;
+    setAnalyticsConsent(saved.analytics);
     closeBanner();
   } else {
     openBanner();
@@ -60,11 +65,13 @@
 
   banner.querySelector('[data-cookie="accept"]')?.addEventListener('click', () => {
     saveChoice('essential-a-d');
+    setAnalyticsConsent(true);
     closeBanner();
   });
 
   banner.querySelector('[data-cookie="reject"]')?.addEventListener('click', () => {
     saveChoice('essential');
+    setAnalyticsConsent(false);
     closeBanner();
   });
 
@@ -74,7 +81,9 @@
   });
 
   document.getElementById('cookie-save')?.addEventListener('click', () => {
-    saveChoice(`essential${analytics.checked ? '-a' : ''}${ads.checked ? '-d' : ''}`);
+    const analyticsAllowed = analytics.checked;
+    saveChoice(`essential${analyticsAllowed ? '-a' : ''}${ads.checked ? '-d' : ''}`);
+    setAnalyticsConsent(analyticsAllowed);
     closeBanner();
   });
 
