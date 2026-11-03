@@ -6,7 +6,6 @@
   const settings = document.getElementById('cookie-settings');
   const manage = document.getElementById('cookie-manage');
   const analytics = document.getElementById('cookie-analytics');
-  const ads = document.getElementById('cookie-ads');
   let memoryChoice = '';
 
   const readChoice = () => {
@@ -32,10 +31,10 @@
   };
 
   const parseChoice = value => ({
-    analytics: value.split('-').includes('a'),
-    ads: value.split('-').includes('d')
+    analytics: value.split('-').includes('a')
   });
-  const validChoices = new Set(['essential', 'essential-a', 'essential-d', 'essential-a-d']);
+  const validChoices = new Set(['essential', 'essential-a']);
+  const legacyChoices = new Set(['essential-d', 'essential-a-d']);
   const setAnalyticsConsent = granted => {
     window.cctAnalyticsConsent?.setAnalyticsConsent(granted);
   };
@@ -53,18 +52,19 @@
   };
 
   const choice = readChoice();
-  if (validChoices.has(choice)) {
+  if (validChoices.has(choice) || (legacyChoices.has(choice) && choice.includes('-a'))) {
     const saved = parseChoice(choice);
     analytics.checked = saved.analytics;
-    ads.checked = saved.ads;
     setAnalyticsConsent(saved.analytics);
     closeBanner();
   } else {
+    // An old advertising-only choice is not an Analytics decision. Ask only about Analytics.
+    analytics.checked = false;
     openBanner();
   }
 
   banner.querySelector('[data-cookie="accept"]')?.addEventListener('click', () => {
-    saveChoice('essential-a-d');
+    saveChoice('essential-a');
     setAnalyticsConsent(true);
     closeBanner();
   });
@@ -82,7 +82,7 @@
 
   document.getElementById('cookie-save')?.addEventListener('click', () => {
     const analyticsAllowed = analytics.checked;
-    saveChoice(`essential${analyticsAllowed ? '-a' : ''}${ads.checked ? '-d' : ''}`);
+    saveChoice('essential' + (analyticsAllowed ? '-a' : ''));
     setAnalyticsConsent(analyticsAllowed);
     closeBanner();
   });
@@ -96,7 +96,6 @@
     button.addEventListener('click', () => {
       const saved = parseChoice(readChoice());
       analytics.checked = saved.analytics;
-      ads.checked = saved.ads;
       openBanner();
       settings.hidden = false;
       manage?.setAttribute('aria-expanded', 'true');
