@@ -33,3 +33,5 @@
 
 .author-portrait{width:96px;height:128px;aspect-ratio:3/4;object-fit:cover;border-radius:12px;display:block;margin:0 0 .75rem}
 .card img.author-portrait{width:96px;height:128px;aspect-ratio:3/4;object-fit:cover;border-radius:12px;display:block;margin:0 0 .75rem}
+
+.meet-ariane .ariane-card{display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;gap:1.25rem}.meet-ariane .ariane-card>img.author-portrait{margin:0}.meet-ariane .ariane-copy>:first-child{margin-top:0}.meet-ariane .ariane-copy p{margin:.5rem 0}@media(max-width:560px){.meet-ariane .ariane-card{grid-template-columns:72px minmax(0,1fr);gap:.85rem}.meet-ariane .ariane-card img.author-portrait{width:72px;height:96px}}
